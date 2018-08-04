@@ -18,6 +18,7 @@ Also:
  1. Redmine integration for bug reporting
  2. Sentry integration
  3. Steam auth integration
+ 4. Match making
 
 Author got inspiration from BigWorld game engine, Python and UE4
 
