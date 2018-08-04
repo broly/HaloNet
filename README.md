@@ -14,6 +14,11 @@ Main features:
  9. User registration and logining via game
  10. Log support
 
+Also:
+ 1. Redmine integration for bug reporting
+ 2. Sentry integration
+ 3. Steam auth integration
+
 Author got inspiration from BigWorld game engine, Python and UE4
 
 In this release used is only Unreal Engine 4. And most features can be also used via blueprints
