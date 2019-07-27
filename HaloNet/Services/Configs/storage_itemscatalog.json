@@ -1,0 +1,21 @@
+[
+  {
+    "Name": "RedCloth",
+    "Asset": "Blueprint'/Game/Viper/Blueprints/Items/TestItem.TestItem'",
+    "MaxStack": 1,
+    "CompatibleSlot": "Skin"
+  },
+  {
+    "Name": "NaziCloth",
+    "Asset": "Blueprint'/Game/Viper/Blueprints/Items/Skin1.Skin1'",
+    "MaxStack": 1,
+    "CompatibleSlot": "Skin"
+  },
+  {
+    "Name": "YellowLamp",
+    "Asset": "Blueprint'/Game/Viper/Blueprints/Items/Lamp.Lamp'",
+    "MaxStack": 1,
+    "CompatibleSlot": "Lighting"
+  }
+
+]

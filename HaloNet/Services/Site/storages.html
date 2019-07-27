@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Storages</title>
+</head>
+<script>
+    function OnReload() {
+        window.open("/storages?act=reload", "_self")
+    }
+    function OnUploadConfigs() {
+        window.open("/storages?act=upload_configs", "_self")
+    }
+    function UnrealEngine4_Goto(asset_path)
+        {
+            var http = new XMLHttpRequest();
+            http.open("GET", "/docs?act=ue4_goto&asset=" + asset_path, true);
+            http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            var params = ""; // probably use document.getElementById(...).value
+            http.send(params);
+            // window.open("/docs?act=goto&filename=" + filename + "&linenumber=" + linenumber, "_self")
+        }
+</script>
+<body>
+    <h2>Хранилища</h2>
+    На этой странице предоставлен интерфейс управления базой данных. Выберете действие из предложенных.
+    <br><br>
+    Вы можете перезагрузить все конфигурационные хранилища этой кнопкой: <input type="button" value="Тырк!" onclick="OnReload()"><br>
+    <br>
+    А так же вы моежете, если хотите загрузить свои чертовы конфиги: <input type="button" value="Загрузить конфиги!" onclick="OnUploadConfigs()"><br>
+
+    {% if STORAGES %}
+        {% for st in STORAGES %}
+            <br> * <a href="/storages?act=view&storage={{ st }}">{{ st }}</a>
+        {% endfor %}
+        {% if STORAGE_INFO %}
+            <br>{{ STORAGE_INFO }}
+        {% endif %}
+    {% else %}
+        <br><a href="/storages?act=view">Обзор загруженных хранилищ</a>
+    {% endif %}
+    {% if TIMEOUT %}
+        <br><br><br><b><font color="red">Ошибка времени ожиданя. Возможно что-то не так с BaseApp</font></b>
+    {% endif %}
+
+    {% if not BASE_ACTIVE %}
+        <br><br><br><b><font color="red">BaseApp неактивен</font></b>
+    {% endif %}
+
+    {% if SUCCESS %}
+        <br><br><br><b><font color="#adff2f">Success</font></b>
+    {% endif %}
+    <br>
+    <br>
+    <a href="/"> На главную </a><br>
+</body>
+</html>

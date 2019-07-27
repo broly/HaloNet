@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dedicated servers</title>
+</head>
+<script>
+    function OnRun(index) {
+        var command = document.getElementById("command").value;
+        if (command)
+        {
+            window.open("/dedicateds?act=run&index=" + index+ "&command=" + command, "_self")
+        }
+
+    }
+</script>
+<body>
+    <br>
+{#    {% set counter = 0 %}#}
+    {% if SERVERS %}
+        <table border="1" cellpadding="20">
+        {% for SERVER in SERVERS %}
+            <tr>
+                <td>
+                    Server #{{loop.index - 1}} <a href="/dedicateds?act=stop&index={{loop.index - 1}}">[x]</a><br>
+                    <hr>
+                    <b>ID</b>: {{ SERVER['ID'] }}<br>
+                    <b>State</b>: {{ SERVER['State'] }}<br>
+                    <b>Access token</b>: {{ SERVER['AccessToken'] }}<br>
+                    <b>Process ID</b>: {{ SERVER['PID'] }}<br>
+                    <b>Game port</b>: {{ SERVER['GamePort'] }}<br>
+                    <b>TextData</b>: {{ SERVER['TextData'] }}<br>
+                    <b>Map</b>: {{ SERVER['MapName'] }}<br>
+                    <b>GameMode info</b>: {{ SERVER['GameModeInfo'] }}<br>
+                </td>
+                <td>
+                    <b>Execute console command:</b>
+                    <br>
+                    <br>
+                    <input type="text" size="40" title="command" id="command">
+                    <br>
+                    <br>
+                    <input type="button" value="Submit" onclick="OnRun({{loop.index - 1}})"><br>
+                    <br>
+                    Or <a href="/dedicateds?act=reset&index={{loop.index - 1}}">reset</a> this server
+                </td>
+            </tr>
+{#            {% set counter = counter + 1 %}#}
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2> There are no dedicated servers ran </h2>
+    {% endif %}
+
+    {% if TIMEOUT %}
+        <br><br><br><b><font color="red">Ошибка времени ожиданя. Возможно что-то не так с Supervisor</font></b>
+    {% endif %}
+
+    {% if not BASE_ACTIVE %}
+        <br><br><br><b><font color="red">BaseApp неактивен</font></b>
+    {% endif %}
+
+    <br>
+    <br>
+    <a href="/"> На главную </a><br>
+</body>
+</html>

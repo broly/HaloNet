@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Style the tab */
+        div.tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        div.tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        /* Change background color of buttons on hover */
+        div.tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        div.tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+
+    <script>
+        function openCategory(evt, categoryName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(categoryName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        function PyCharm_Goto(filename, linenumber)
+        {
+            var http = new XMLHttpRequest();
+            http.open("GET", "/docs?act=pycharm_goto&filename=" + filename + "&linenumber=" + linenumber, true);
+            http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            var params = ""; // probably use document.getElementById(...).value
+            http.send(params);
+            // window.open("/docs?act=goto&filename=" + filename + "&linenumber=" + linenumber, "_self")
+        }
+
+        function UnrealEngine4_Goto(asset_path)
+        {
+            var http = new XMLHttpRequest();
+            http.open("GET", "/docs?act=ue4_goto&asset=" + asset_path, true);
+            http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            var params = ""; // probably use document.getElementById(...).value
+            http.send(params);
+            // window.open("/docs?act=goto&filename=" + filename + "&linenumber=" + linenumber, "_self")
+        }
+
+
+    </script>
+    <title>Registration</title>
+    {{ object|set_broken_decorators('<a href="/docs?cat=types#type_%s" style="text-decoration: none" title="Templated type may has nested types">', '</a>') }}
+    {{ object|set_broken_mb_decorators('<a href="/docs?entity=%s" style="text-decoration: none" title="Mailbox type is remote entity of specified class">', '</a>') }}
+</head>
+<body>
+    <h1> Welcome to HaloNet!</h1>
+    <h2> Документация сетевых объектов </h2>
+    {% if BACK %}
+        <a href="/docs">Назад</a><br>
+    {% endif %}
+
+    {% if BROWSE_ALL %}
+        1. <a href="/docs?cat=entities">Сущности</a><br>
+        2. <a href="/docs?cat=types">Типы данных</a><br>
+        3. <a href="/docs?cat=storages">Хранилища</a><br>
+    {% endif %}
+
+    {% if ENTITIES %}
+        <div>
+            <h2> Сущности и сервисы </h2>
+            <table border="1" cellpadding="20">
+            {% for entity_name, entity_data in ENTITIES.items() %}
+                <tr>
+                <td>
+                    <b><a href="/docs?entity={{ entity_name }}">{% if entity_data['additional']['IsApp'] %}<font color="#32cd32">{% else %}<font color="#2f4f4f">{% endif %}{{ entity_name }}</font></a></b>
+                </td>
+                <td>
+                    <center>
+                    {% if entity_data['additional']['Doc'] %}
+                        {{ entity_data['additional']['Doc'] }}
+                    {% else %}
+                        <font color="#a9a9a9">No documentation</font>
+                    {% endif %}
+                    </center>
+                </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+    {% if ENTITY %}
+        <div>
+            <h2> Сущности и сервисы </h2>
+            <h3> Сущность {{ ENTITY_NAME }}</h3>
+            <ul>
+                {% if ENTITY['additional']['IsApp'] %}<li>Сущность-приложение</li> {% endif %}
+                {% if not ENTITY['additional']['IsApp'] %}<li>Контекстная сущность</li> {% endif %}
+                {% if ENTITY['additional']['IsApp'] and ENTITY['additional']['IsExposedApp'] %}<li>Приложение с открытым доступом</li> {% endif %}
+                {% if ENTITY['additional']['ContextName'] %}<li>Контекст приложения <font color="#b22222">{{ ENTITY['additional']['ContextName'] }}</font></li> {% endif %}
+            </ul>
+            <br>
+            {% if ENTITY['additional']['Doc'] %}
+                <tt>{{ ENTITY['additional']['Doc'] }}</tt>
+            {% endif %}
+            <br>
+            <br>
+
+
+
+            <div class="tab">
+              {% for context_name, context_data in ENTITY['context_data'].items() %}
+                <button class="tablinks" onclick="openCategory(event, '{{ context_name }}')" id="id_{{ context_name }}">{{ context_name }}</button>
+              {% endfor %}
+            </div>
+                {% for context_name, context_data in ENTITY['context_data'].items() %}
+                    <div id="{{ context_name }}" class="tabcontent">
+                        <a href="#goto_{{ context_name }}" title="go to code [PyCharm]" name="goto_{{ context_name }}" onclick="PyCharm_Goto('{{ context_data['InspectInfo']['filename'] }}', '{{ context_data['InspectInfo']['line'] }}')" style="text-decoration: none"><font size="2"><sup>🔗</sup></font></a>
+                        <font size="6" color="#b22222" title="(где используется эта сущность)">{{ context_name }}</font>
+                        {% if context_data['UsingClass'] %}<br>Asset: <a href="#" onclick="UnrealEngine4_Goto('{{ context_data['UsingClass'] }}')">{{ context_data['UsingClass'] }}</a> {% endif %}
+                        <table>
+                            <tr>
+                                <td>
+                                    {% if context_data["Properties"] %}
+                                        <table bgcolor="#fff8f3" cellpadding="20">
+                                        <tr><td bgcolor="#ffd8d3" colspan="3"> Свойства </td></tr>
+                                        <tr>
+                                            <td bgcolor="#ffe8e3">Тип</td>
+                                            <td bgcolor="#ffe8e3">Свойство</td>
+                                            <td bgcolor="#ffe8e3">Описание</td>
+                                        </tr>
+                                            {% for prop in context_data["Properties"] %}
+                                                <tr>
+                                                    <td><div align="RIGHT"><font size="2" color="#9932cc">{{ object|break_type(prop['Type']) }}</font></div></td>
+                                                    <td>
+                                                        <a href="#goto_{{ T_name }}" title="go to code [PyCharm]" name="goto_{{ prop['Name'] }}" onclick="PyCharm_Goto('{{ prop['InspectInfo']['filename'] }}', '{{ prop['InspectInfo']['line'] }}')" style="text-decoration: none"><font size="2"><sup>🔗</sup></font></a>
+                                                        <font size="5" color="#191970">{{ prop['Name'] }}</font>
+                                                        {% if prop['Persistent'] %}<font color="#00bfff" title="Persistent - хранится в базе данных" size="5">∞</font>{% endif %}
+                                                        {% if prop['Replicated'] %}<font color="#4b0082" title="Replicated - копируется на клиентскую часть сущности" size="5">☍</font>{% endif %}
+                                                        {% if prop['Transactional'] %}<font color="#7b68ee" title="Transactional - меняется в транзакции" size="5">🗘</font>{% endif %}
+                                                        {% if prop['HasDefault'] %} <font color="#7979C0" size="5" title="Default value"><i> = {{ prop['Default'] }} </i>  </font> {% endif %}
+
+
+                                                    </td>
+                                                    <td>{{ object|parse_comments(prop['Comment']) }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    {% endif %}
+
+                                    <table bgcolor="#f0ffff" cellpadding="20">
+                                    <tr><td colspan="2" bgcolor="#c0ffff" >Методы</td></tr>
+                                    <tr>
+                                        <td bgcolor="#e0ffff" width="1000">
+                                            Метод
+                                        </td>
+                                        <td bgcolor="#e0ffff" width="1000">
+                                            Описание
+                                        </td>
+                                    </tr>
+                                    {% for method_data in context_data['Methods'] %}
+
+                                        <tr>
+                                            <td>
+
+                                                <a href="#goto_{{ method_data['Name'] }}" title="go to code [PyCharm]" name="goto_{{ method_data['Name'] }}" onclick="PyCharm_Goto('{{ method_data['InspectInfo']['filename'] }}', '{{ method_data['InspectInfo']['line'] }}')" style="text-decoration: none"><font size="2"><sup>🔗</sup></font></a>  
+                                                <font size="5" color="#191970" title="Method index: {{ method_data['ID'] }}">{{ method_data['Name'] }}</font>
+                                                &nbsp;
+                                                {% if method_data['Async'] %}<font color="#deb887" title="async - асинхронный метод" size="5">⮂</font>{% endif %}
+                                                {% if method_data['Exposed'] %}<font color="#fa8072" title="Exposed - открытый метод (для UE4 клиентов и серверов)" size="5">👁</font>{% endif %}
+                                                {% if method_data['BlueprintCallable'] %}<font color="#7b68ee" title="BlueprintCallable - вызываемый из Blueprint" size="5">👁</font>{% endif %}
+                                                {% if method_data['BlueprintNativeEvent'] %}<font color="#9932cc" title="BlueprintNativeEvent - имплементация на C++/Blueprint" size="5">⚙</font>{% endif %}
+                                                {% if method_data['BlueprintImplementableEvent'] %}<font color="#add8e6" title="BlueprintImplementableEvent - имплементация на Blueprint" size="5">⚙</font>{% endif %}
+                                                {% if method_data['Latent'] %}<font color="#778899" title="Latent - латентная функция (с возможностью ожидания резульата в Blueprint EventGraph)" size="3">🕒</font>{% endif %}
+                                                {% if method_data['Exec'] %}<font color="navy" title="Exec - можно вызвать через консоль" size="5">🖮</font>{% endif %}
+
+                                                {% if method_data['Access'] == 0 %}<font color="#ffe4e1" title="Уровень доступа 0 (public/общедоступный)" size="5">⓪</font>{% endif %}
+                                                {% if method_data['Access'] == 1 %}<font color="#dc143c" title="Уровень доступа 1 (private/сокрытый от клиентов)" size="5">①</font>{% endif %}
+                                                {% if method_data['Access'] == 2 %}<font color="red" title="Уровень доступа 2 (internal/внутренний)" size="5">②</font>{% endif %}
+
+                                                <br>
+                                                (
+                                                <table>
+                                                {% for arg in method_data['Args'] %}
+                                                    <tr><td>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ arg }}: <font color="#9932cc">{{ object|break_type(method_data['Args'][arg]) }} </font>,
+                                                    </td>
+                                                    <td>
+                                                        {% if method_data['DocstringDecay']['Args'][arg] %}<font color="#d3d3d3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{ method_data['DocstringDecay']['Args'][arg] }}</font>{% endif %}
+                                                    </td></tr>
+                                                {% endfor %}
+                                                </table>
+                                                ) {% if method_data['Returns'] %}&nbsp;&nbsp;<font size="5">⇒</font>&nbsp;&nbsp;{% for r in method_data['Returns']  %} <font color="#9932cc">{{ object|break_type(r) }}</font>{% endfor %}{% if method_data['DocstringDecay']['Returns'] %}<font color="#d3d3d3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   {{ method_data['DocstringDecay']['Returns'] }}</font>{% endif %}{% endif %}
+                                                {% if method_data['DocstringDecay']['Warnings'] %}<br><br><font color="#dc143c" size="3"><i>Предупреждение: <b>{{ method_data['DocstringDecay']['Warnings'] }}</b></i></font>  {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if method_data['DocstringDecay']['Description'] %}
+                                                    {{ method_data['DocstringDecay']['Description'] }}
+                                                {% else %}
+                                                    <font color="#a9a9a9">No documentation</font>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if TYPES %}
+        <div>
+            <table bgcolor="#f0ffff" cellpadding="20">
+                {% for T_name, T_data in TYPES.items() %}
+                    <tr bgcolor="#b0e0e6"><td>
+                    {% if T_data['Kind'] == 'Struct' %}
+                            <a href="#goto_{{ T_name }}" title="go to code [PyCharm]" name="goto_{{ T_name }}" onclick="PyCharm_Goto('{{ T_data['InspectInfo']['filename'] }}', '{{ T_data['InspectInfo']['line'] }}')" style="text-decoration: none"><font size="2"><sup>🔗</sup></font></a>
+                            <font color="#7b68ee">struct</font> <a href="/docs?cat=types#type_{{ T_name }}" name="type_{{ T_name }}"><font size="5" color="#191970">{{ T_name }}</font></a>
+                            {% if T_data['BlueprintType'] %}<font color="#7b68ee" title="Blueprint type" size="5">◈</font>{% endif %}
+                            {% if T_data['Blueprintable'] %}<font color="#7b68ee" title="Blueprintable" size="5">◇</font>{% endif %}
+                            {% if T_data['IsLocal'] %}<font color="#d2b48c" title="Local datatype (not generated)" size="5">⎊</font>{% endif %}
+                            <br>
+                            <table>
+                                {% for field_name, field_data in T_data['Fields'].items() %}
+                                    <tr>
+                                        <td>&nbsp;&nbsp;&nbsp;{{ field_name }}:  <font color="#9932cc">{{ object|break_type(field_data['Name']) }}</font> </td>
+                                        <td>{% if T_data['DocstringDecay']['Vars'][field_name] %}<font color="#696969">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{ T_data['DocstringDecay']['Vars'][field_name] }}</font>{% endif %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                    {% endif %}
+                    {% if T_data['Kind'] == 'Enum' %}
+                            <a href="#goto_{{ T_name }}" title="go to code [PyCharm]" name="goto_{{ T_name }}" onclick="PyCharm_Goto('{{ T_data['InspectInfo']['filename'] }}', '{{ T_data['InspectInfo']['line'] }}')" style="text-decoration: none"><font size="2"><sup>🔗</sup></font></a>
+                            <font color="#ff8c00">enum</font> <a href="/docs?cat=types#type_{{ T_name }}" name="type_{{ T_name }}"><font size="5" color="#191970">{{ T_name }}</font></a>
+                            {% if T_data['BlueprintType'] %}<font color="#7b68ee" title="Blueprint type" size="5">◈</font>{% endif %}
+                            {% if T_data['Blueprintable'] %}<font color="#7b68ee" title="Blueprintable" size="5">◇</font>{% endif %}
+                            {% if T_data['IsLocal'] %}Q<font color="lime" title="Local datatype" size="5">♿</font>{% endif %}
+                            <br>
+                            {% for member_name, member_data in T_data['Members'].items() %}
+                             &nbsp;&nbsp;&nbsp;{{ member_name }}<br>
+                            {% endfor %}
+                    {% endif %}
+                    {% if T_data['Kind'] == 'Local' %}
+                            <a href="#goto_{{ T_name }}" title="go to code [PyCharm]" name="goto_{{ T_name }}" onclick="PyCharm_Goto('{{ T_data['InspectInfo']['filename'] }}', '{{ T_data['InspectInfo']['line'] }}')" style="text-decoration: none"><font size="2"><sup>🔗</sup></font></a>
+                            <font color="#a9a9a9">basic</font> <a href="/docs?cat=types#type_{{ T_name }}" name="type_{{ T_name }}"><font size="5" color="#191970">{{ T_name }}</font></a>:<br>
+                    {% endif %}
+                    <br>
+                    <i>Тип в базе данных: <b>{{ T_data["PgSpec"] }}</b></i>
+                    </td>
+                    <td>
+                        {% if T_data['DocstringDecay'] %}
+                            {{ T_data['DocstringDecay']['Description'] }}
+                        {% else %}
+                            {% if T_data['Docstring'] %}
+                                {{ "<br>".join(T_data['Docstring']) }}
+                            {% else %}
+                                <font color="#a9a9a9">No documentation</font>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+
+    <br>
+    <br>
+    <a href="/"> На главную </a><br>
+
+</body>
+<script>
+    {% if ENTITY %}
+        {% for context_name, context_data in ENTITY['context_data'].items() %}
+            {% if loop.index == 1 %}
+                document.getElementById("id_{{ context_name }}").click();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="static/styles.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<script>
+    function OnReg() {
+        var username = document.getElementById("username").value;
+        var mail = {% if REG_WITH_MAIL %} document.getElementById("mail").value {% else %} "null" {% endif %};
+        var password = document.getElementById("password").value;
+
+
+        if (username && password{% if REG_WITH_MAIL %} && mail{% endif %})
+        {
+            window.open("/reg?act=reg&username=" + username + "&password=" + password + "&mail=" + mail, "_self")
+        }
+
+    }
+</script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/md5.js"></script>
+<body>
+	<div class="left_block">
+		<div class="logo_block">
+		</div>
+		<div class="login_block">
+
+            {% if CONFIRM_DATA %}
+                {% if CONFIRM_DATA['success'] %} <div class="register_message_text_success">register <b>{{ CONFIRM_DATA['username'] }}</b> success</div>{% else %} <div class="register_message_text_failed">register failed</div> {% endif %}<br>
+            {% else %}
+                <span class="login_title">User Registration</span>
+                <div class="login_input_block">
+                    <div class="login_input_title">Username</div>
+                    <div class="login_input_background"><input type="text" size="40" title="username" class="login_input" id="username"></div>
+                </div>
+                {% if REG_WITH_MAIL %}
+                    <div class="login_input_block">
+                        <div class="login_input_title">Mail</div>
+                        <div class="login_input_background"><input type="text" size="40" title="username" class="login_input" id="mail"></div>
+                    </div>
+                {% endif %}
+                <div class="login_input_block">
+                    <div class="login_input_title">Password</div>
+                    <div class="login_input_background"><input type="password" size="40" title="password" class="login_input" id="password"></div>
+                </div>
+                <div class="register_message">
+                {% if DONE_DATA %}
+                    {% if DONE_DATA['success'] %} <div class="register_message_text_success">register success (check your mail)</div>{% else %} <div class="register_message_text_failed">register failed</div> {% endif %}<br>
+                {% endif %}
+            {% endif %}
+
+			</div>
+			<div class="registr_button_block">
+				<div class="registr_button">
+					<input type="button" class="registr_button_input" value="Register" onclick="OnReg()">
+				</div>
+			</div>
+
+			{% if TIMEOUT %}
+				<div class="register_message_text_failed">server failed: timeout</div>
+			{% endif %}
+
+			{% if not BASE_ACTIVE %}
+				<div class="register_message_text_failed">server failed: base not active</div>
+			{% endif %}
+
+			<!--<a href="/"> На главную </a><br>-->
+		</div>
+	</div>
+</body>
+</html>

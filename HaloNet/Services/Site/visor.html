@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visor</title>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Time', 'Online', 'In game'],
+
+          {% for entry in ONLINE %}
+              ['{{ object|to_string(entry['Date']) }}', {{ entry['OnlineCount'] }}, {{ entry['InGameCount'] }}],
+          {% endfor %}
+          // ['2004',  1000,      400],
+          // ['2005',  1170,      460],
+          // ['2006',  660,       1120],
+          // ['2007',  1030,      540]
+        ]);
+
+        var options = {
+            title: 'Online graph',
+            curveType: 'none',
+            legend: { position: 'bottom' }
+        };
+
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+
+      function runCmd(ID) {
+          var input = document.getElementById("cmd_" + ID);
+
+          if (input.value !== "") {
+            window.open("/visor?act=exec&cmd=" + input.value + "&id=" + ID  , "_self")
+          }
+      }
+    </script>
+
+    <style>
+    canvas{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
+</head>
+<body bgcolor="#2f4f4f">
+    <div style="width:75%;">
+        <div id="curve_chart" style="width: 900px; height: 500px"></div>
+    </div>
+//
+
+    <span style="color: #ffe4c4; ">
+{% for service_info in INFO %}
+    <h3>{{ service_info['AppName'] }}</h3>
+    <table border="1" bordercolor="#ffebcd">
+        <tr>
+            <td>
+                <span style="color: #54aae3;">Players online: {{ service_info['Players']|count }}</span>
+            </td>
+            <td>
+                <span style="color: #54aae3;">Games now: {{ service_info['Games']|count }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table bordercolor="#f5f5dc">
+                    <tr>
+                        <td>
+                            {% for p in service_info['Players'] %}
+                                <h4>User <span style="color: #54aae3; ">{{ p.username }}</span></h4>
+                                Registered "{{ p.register_date }}"<br>
+                                Online since "{{ p.online_date }}"<br>
+                                <br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table bordercolor="#f5f5dc">
+                    <tr>
+                        <td>
+                            {% for g in service_info['Games'] %}
+                                Game type:
+                                {% if g['GameType'] == 0 %}<span style="color: #ff7f50; ">Arena</span>{% endif %}
+                                {% if g['GameType'] == 1 %}<span style="color: #7fff00; ">Campaign</span>{% endif %}<br>
+                                Map: {{ g["MapName"] }}<br>
+                                Capacity: {{ g["MatchUsers"]|count }}/{{ g["MatchMax"] }}<br>
+                                Players: {% for player in g['MatchUsers'] %}{{ player }}<br>  {% endfor %}<br>
+                                <input type="text" title="command" id="cmd_{{g['ID']}}"><input type="button" title="text"  value="run" onclick="runCmd({{ g['ID'] }})">
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+    </table>
+
+
+    <hr>
+{% endfor %}
+</span>
+
+</body>
+</html>

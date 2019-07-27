@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "SimpleBattle",
+    "Asset": "/Game/Viper/Maps/TopDownExampleMap",
+    "GameMode": "Blueprint'/Game/Viper/Blueprints/GameModes/ViperGameMode_BP.ViperGameMode_BP'",
+    "PlayersMax": 100,
+    "Type": "Simple"
+  },
+  {
+    "Name": "SurvivalBattle",
+    "Asset": "/Game/Viper/Maps/TopDownExampleMap",
+    "GameMode": "Blueprint'/Game/Viper/Blueprints/GameModes/ViperGameMode_Survival_BP.ViperGameMode_Survival_BP'",
+    "PlayersMax": 10,
+    "Type": "Survival"
+  }
+]

@@ -1,0 +1,28 @@
+html, body {
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+  }
+body {
+	background: url('./images/fon.png') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+.left_block
+{
+	display: block;
+    position:absolute;
+	width:500px;
+	height:100%;
+	margin:0;
+	padding:100px;
+}
+.login_block
+{
+    height:auto;
+	background: url('./images/plashka.png') repeat-y; 
+	margin:0;
+}

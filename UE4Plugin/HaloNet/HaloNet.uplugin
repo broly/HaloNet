@@ -1,0 +1,26 @@
+{
+	"FileVersion" : 1,
+
+	"FriendlyName" : "HaloNet plugin",
+	"Version" : 1,
+	"VersionName" : "1.0",
+	"CreatedBy" : "Broly",
+	"CreatedByURL" : "",
+	"Description" : "HaloNet",
+	"Category" : "Network",
+	"EnabledByDefault" : true,
+	
+	"Modules" :
+	[
+		{
+		  "Name": "HaloNet",
+		  "Type": "Runtime",
+		  "LoadingPhase": "PostConfigInit"
+		},
+		{
+		  "Name": "HaloNetEditor",
+		  "Type": "Developer",
+		  "LoadingPhase": "PostEngineInit"
+		}
+	]
+}

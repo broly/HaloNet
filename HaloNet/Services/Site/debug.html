@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function ExecuteCode(){
+            var text = document.getElementById("ccode").value;
+            var find = "\n";
+            var re = new RegExp(find, 'g');
+            text = text.replace(re, "$$$20");
+            window.open("/debug?exec=" + text, "_self")
+        }
+
+        function EntityGetter(id) {
+            var textarea = document.getElementById("ccode");
+            var text = textarea.value;
+            text += "Globals.this_service.entities[" + id.toString() + "];";
+            textarea.value = text;
+        }
+        
+        function CallDisplayAction(actionName, id) {
+            window.open("/debug?act=view&id=" + id + "&action=" + actionName, "_self")
+        }
+    </script>
+</head>
+<body>
+    <br>
+    Execute custom code:<br>
+    <textarea name="text" rows="10" cols="45" id="ccode"></textarea><br>
+    <button onclick="ExecuteCode()">Execute</button><br><br>
+    {% if RESULT != "" %}
+        <br>Result:<br><br>
+        <b>{{ RESULT }}</b><br><br>
+    {% endif %}
+
+    {% if VIEW_STRUCTURE != "" %}
+        {{ VIEW_STRUCTURE }}
+    {% endif %}
+
+    Entities on BaseApp:<br><br>
+
+    {% if ENTITIES %}
+        {% for id, entity in ENTITIES.items() %}
+            <a onclick="EntityGetter({{ id }});" title="Click to add ref to code">{{ entity }}</a><a href="/debug?act=view&id={{ id }}"> <b>[view structure]</b></a> <br>
+        {% endfor %}
+
+        {% if TIMEOUT %}
+            <br><br><br><b><font color="red">Ошибка времени ожиданя. Возможно что-то не так с Supervisor</font></b>
+        {% endif %}
+
+        {% if not BASE_ACTIVE %}
+            <br><br><br><b><font color="red">BaseApp неактивен</font></b>
+        {% endif %}
+{   {% endif %}
+</body>
+</html>

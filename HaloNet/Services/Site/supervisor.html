@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supervisor</title>
+</head>
+<body bgcolor="#696969">
+    <span style="color: darkseagreen; ">
+        {% set HAS_DBAPPS = SERVICES['DBApp']|count > 0 %}
+        {% set HAS_BASEAPPS = SERVICES['BaseApp']|count > 0 %}
+
+        <h1>Daemons</h1>
+        {% for CONN, INFO in DAEMONS.items() %}
+            Daemon <span style="color: lightcyan">{{ INFO.daemon_id }}</span>
+            at <span style="color: lightcyan">{{ INFO.mac }}</span>
+            <i><b>(<span style="color: lightcyan">{{ INFO.region }}</span>)</b></i>
+            {% if HAS_DBAPPS %}
+            [<a href="/?act=wakeup&daemon_id={{ INFO.daemon_id }}&app=BaseApp">+BaseApp</a>]
+            {% endif %}
+            [<a href="/?act=wakeup&daemon_id={{ INFO.daemon_id }}&app=DBApp">+DBApp</a>]
+            {% if HAS_DBAPPS %}
+            [<a href="/?act=wakeup&daemon_id={{ INFO.daemon_id }}&app=LoginApp">+LoginApp</a>]
+            {% endif %}
+            {% if HAS_BASEAPPS %}
+            [<a href="/?act=wakeup&daemon_id={{ INFO.daemon_id }}&app=Site">+Site</a>]
+            {% endif %}
+            <br/>
+        {% endfor %}
+
+        <h1>All services</h1>
+        {% for SERVICE_NAME, MBOXES in SERVICES.items() %}
+            {{ SERVICE_NAME }} ({{ MBOXES|count }})
+            <br>
+            {% for i in range(MBOXES|count) %}
+                {{ SERVICE_NAME }} [<a href="/?act=stop&app={{ SERVICE_NAME }}&index={{ i }}">x</a>]<br>
+            {% endfor %}
+            <br>
+            <br>
+        {% endfor %}
+    </span>
+</body>
+</html>
