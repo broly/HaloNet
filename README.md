@@ -24,4 +24,20 @@ Author got inspiration from BigWorld game engine, Python and UE4
 
 In this release used is only Unreal Engine 4. And most features can be also used via blueprints
 
+Some features in screenshots:
+
+Using in blueprints (C++ generated nodes)
+![alt text](https://github.com/broly/HaloNet/blob/master/Pics/halonet_blueprint.png?raw=true)
+
+Unreal style RMI declarations (will generate similar C++ code)
+![alt text](https://github.com/broly/HaloNet/blob/master/Pics/halonet_rmi.png?raw=true)
+
+Async method call in C++ (using generated code)
+![alt text](https://github.com/broly/HaloNet/blob/master/Pics/halonet_ue4_async_call.png?raw=true)
+
+Generated docs for each user-defined RMI and variable
+![alt text](https://github.com/broly/HaloNet/blob/master/Pics/halonet_generated_methods.png?raw=true)
+
+And much more you can see in source code
+
 Contact me: metrickxxx@gmail.com
