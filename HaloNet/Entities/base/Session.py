@@ -27,13 +27,13 @@ class Session(BaseEntity):
     # properties
     # just current username
     Username:               FString                         [Replicated]
-    # Предметы игрока
+    # Player items
     Items:                  TMap[int32, FItemInstance]      [Replicated, Persistent, Transactional, PartialRep_EXPERIMENTAL]
-    # Порядок предметов: Инстанс-ИД: Индекс порядка (iiid: oid)
+    # Items order: instance-id: order index (iiid: oid)
     ItemsOrder:             TMap[int32, int32]              [Replicated, Persistent, Transactional, PartialRep_EXPERIMENTAL]
-    # Глобальный счетчик предметов
+    # Global items counter
     ItemsCounter:           int32                           [Persistent, Transactional]
-    # Экипированные предметы
+    # Equipped items
     Equipment:              TMap[EEquipmentSlot, int32]     [Replicated, Persistent, PartialRep_EXPERIMENTAL]
 
     async def __ainit__(self, dbid, username):
@@ -89,16 +89,15 @@ class Session(BaseEntity):
 
     @rmi(Exposed, access=0)
     async def LeaveGame(self):
-        """ Покинуть игру 
-            @warning не работает 
+        """ Leave game
+            @warning disabled for now
         """
         INFO_MSG("Leaved game")
 
     @rmi(Exec, Latent, Exposed, BlueprintCallable, access=0)
     async def RequestGameSession(self, game_type: EGameType) -> EReqGameResponse:
-        """ Запрос игровой сессии 
-            @param map_name: имя карты 
-            @param char_id: ид персонажа для игры
+        """ request for session
+            @param game_type: the type of game that should be play
         """
         return await self.base.request_quick_match(self, game_type)
 

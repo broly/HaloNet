@@ -203,7 +203,7 @@ class BaseApp(Service):
         session.destroy()
 
     @rmi(Exposed, access=0)
-    async def GetServerTime(self) -> double:
+    async def GetServerTime(self) -> Float:
         """ Возвращает время на сервисе """
         return self.service.time()
 
@@ -387,7 +387,7 @@ class BaseApp(Service):
             self.match_making.request_player_exit_from_game(session)
 
     @rmi(Exposed, access=0)
-    async def RequestCustomLocalNetworkVersion(self) -> uint32:
+    async def RequestCustomLocalNetworkVersion(self) -> int32:
         local_network_version = UE4AppConfig.CustomLocalNetworkVersion
         return local_network_version if local_network_version else 0
 

@@ -13,13 +13,13 @@ class SupervisorWebConfig(SupervisorConfigBase, name="SupervisorWeb"):
 
 class DaemonConfig(DaemonConfigBase):
     Machines = {
-        "2C:4D:54:50:D3:E2": StaticAppInfo(Endpoint=("127.0.0.1", 8001), ExposedIP="127.0.0.1", Region='RU', Index=0)
+        "02:06:51:50:31:61": StaticAppInfo(Endpoint=("127.0.0.1", 8001), ExposedIP="127.0.0.1", Region='RU', Index=0)
     }
 
 
 class LoginAppConfig(LoginAppConfigBase):
     Machines = {
-        "2C:4D:54:50:D3:E2": StaticAppInfo(Endpoint=("127.0.0.1", 9000), ExposedIP="127.0.0.1", Region='RU', Index=0)
+        "02:06:51:50:31:61": StaticAppInfo(Endpoint=("127.0.0.1", 9000), ExposedIP="127.0.0.1", Region='RU', Index=0)
     }
 
 
@@ -40,7 +40,7 @@ class DBAppConfig(DBAppConfigBase):
 
 class SiteConfig(SiteConfigBase, name="Site"):
     Machines = {
-        "2C:4D:54:50:D3:E2": StaticAppInfo(Endpoint=("127.0.0.1", 8003), Region='RU'),
+        "02:06:51:50:31:61": StaticAppInfo(Endpoint=("127.0.0.1", 8003), Region='RU'),
     }
     RoutingEndpoint = '127.0.0.1', 8004
     SMTP: SMTPConfigInfo
@@ -54,7 +54,7 @@ class SiteConfig(SiteConfigBase, name="Site"):
 class UE4AppConfig(UE4AppConfigBase):
     Path = [
         "C:\\Program Files\\Epic Games\\UE_4.19\\Engine\\Binaries\\Win64\\UE4Editor.exe",
-        "C:\\ProjectViper\\Viper\\Viper.uproject"
+        "C:\\HaloNet\\Example\\Example.uproject"
     ]
     Args += '-debug',
     CustomLocalNetworkVersion = 100500
@@ -84,9 +84,9 @@ class GameConfig(ConfigBase, basic=True):
 # class DevSrv(SingleApp, name="DevSrv"):
 #     pass
 
-ConfigGlobals.UE4GeneratorSourcePath = 'C:/ProjectViper/Viper/Source/Viper/HaloNet'
-ConfigGlobals.UE4GeneratorSourceEditorPath = "C:/ProjectViper/Viper/Sources/ViperEditor/HaloNet"
-ConfigGlobals.UE4EditorGameModuleName = "ViperEditor"
+ConfigGlobals.UE4GeneratorSourcePath = 'C:/HaloNet/Example/Source/Example/HaloNet'
+ConfigGlobals.UE4GeneratorSourceEditorPath = "C:/HaloNet/Example/Source/Example/HaloNet"
+ConfigGlobals.UE4EditorGameModuleName = "ExampleEditor"
 ConfigGlobals.Redmine = {
                           "host": "http://62.76.114.56:3000",
                           "api_access_key": "b4d3fe82f464c68c280e510794fb7f24cc3cf6ab",
@@ -94,4 +94,4 @@ ConfigGlobals.Redmine = {
                         }
 ConfigGlobals.UseVersionGeneratorSignature = True
 ConfigGlobals.OutputEntryStyle = OutputStyle.FullPythonStyle
-
+ConfigGlobals.ProjectName = "Example"

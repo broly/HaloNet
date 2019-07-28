@@ -121,10 +121,12 @@ class CodeGen(object):
             @param dst путь сохранения
             @param kwargs параметры шаблонизатору
         """
+        assert ConfigGlobals.ProjectName is not None or \
+            error("ProjectName not specified in config file. Go to your config file to resolve this error")
         with open(src, 'r', encoding='utf-8') as f:
             text = Template(f.read()).render(
-                PROJECT_NAME="Viper",
-                PROJECT_API="VIPER",
+                PROJECT_NAME=ConfigGlobals.ProjectName,
+                PROJECT_API=ConfigGlobals.ProjectName.upper(),
                 **kwargs)
 
             path = os.path.abspath(dst)

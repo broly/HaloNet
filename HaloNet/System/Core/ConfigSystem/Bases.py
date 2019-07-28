@@ -214,10 +214,10 @@ class ConfigGlobals(ConfigBase):
     Version = "1.0"
     UseVersionGeneratorSignature = False
     DisabledLogs = []
-    # Sentry = sentry.biggreendelta.xyz
     Sentry = None
     LatentFunctionsSupported = True
     SuppressedWarnings = ["TYPE_NEGLECT"]
     LoggingFilename = os.path.join("logs", "viper")
     ClearMissingEntitiesDBIDs = False  ## TODO: bugous
     OutputEntryStyle = OutputStyle.ShortInformative
+    ProjectName = None

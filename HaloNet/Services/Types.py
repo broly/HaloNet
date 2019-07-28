@@ -42,14 +42,14 @@ class EMatchState:
     InGame:     member()
 
 
-@USTRUCT()
+@USTRUCT(Blueprintable, BlueprintType)
 class FDedicatedServerInfo:
     """
     Информация о Dedicated server
-    @cvar GamePort: порт
-    @cvar PID: ИД процесса
-    @cvar TextData: текустовые данные
-    @cvar AccessToken: токен доступа
+    @cvar GamePort: dedicated server listen port
+    @cvar PID: process identifier
+    @cvar TextData: text data of this process
+    @cvar AccessToken: access token for authority
     """
     ID: int32
     State: EMatchState
@@ -102,7 +102,7 @@ class EEquipmentSlot:
 @USTRUCT(BlueprintType, Blueprintable)
 class FViperItemInfo:
     Name: FName
-    Asset: TSubclassOf['UViperItem']
+    # Asset: TSubclassOf['UViperItem']
     MaxStack: int32
     CompatibleSlot: EEquipmentSlot
 
