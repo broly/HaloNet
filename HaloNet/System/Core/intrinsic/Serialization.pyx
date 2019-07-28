@@ -18,16 +18,6 @@ cdef extern from "BinaryArchive.h":
 class SerializationError(ValueError):
     """ Error while serializing or deserializing """
 
-
-
-cdef class Test:
-    async def qwe(self):
-        pass
-
-    async def ewq(self):
-        await self.qwe()
-
-
 cdef class BinarySerializationProxy:
     def __init__(self, data_list):
         self.data_list = data_list
@@ -104,18 +94,13 @@ cdef class BinarySerialization:
     def get_data(self):
         cdef vector[char*] data
         cdef vector[int] counts
-
         self.archive.GetData(data, counts)
-
         result = []
         for i in range(data.size()):
             s = data[i]
             size = counts[i]
             result.append(s[:size])
-
-
         return result
-
 
     def proxy(self):
         return BinarySerializationProxy(self.get_data())
