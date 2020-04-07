@@ -22,7 +22,7 @@ Also:
 
 I got inspiration from BigWorld game engine, Python and UE4
 
-In this release used is only Unreal Engine 4. And most features can be also used via blueprints
+In this version of HaloNet used is only Unreal Engine 4. And most features can be also used via blueprints
 
 Some features in screenshots:
 
