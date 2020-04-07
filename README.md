@@ -20,7 +20,7 @@ Also:
  3. Steam auth integration
  4. Match making
 
-Author got inspiration from BigWorld game engine, Python and UE4
+I got inspiration from BigWorld game engine, Python and UE4
 
 In this release used is only Unreal Engine 4. And most features can be also used via blueprints
 
