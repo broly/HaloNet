@@ -38,6 +38,4 @@ Async method call in C++ (using generated code)
 Generated docs for each user-defined RMI and variable
 ![alt text](https://github.com/broly/HaloNet/blob/master/Pics/halonet_generated_methods.png?raw=true)
 
-And much more you can see in source code
-
 Contact me: metrickxxx@gmail.com
